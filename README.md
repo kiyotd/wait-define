@@ -21,30 +21,28 @@ If you wait until `window.hello` is defined
 ```typescript
 import { waitDefine } from '@kiyotd/wait-define';
 
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener('DOMContentLoaded', async () => {
   console.log('waiting for window.hello ...');
 
-  // window.hello が定義されるまで待つ, 監視間隔は 500ms, タイムアウトは 2000ms
-  waitDefine('hello', window, 500, 2000)
+  setTimeout(() => {
+    // @ts-ignore
+    window.hello = 'world';
+  }, 2500);
+
+  waitDefine('hello', window, 100, 2000)
     .then(() => {
       console.log('window.hello is defined!');
     })
     .catch((error) => {
       console.error('An error occurred:', error);
     });
-
-  // window.hello を定義する
-  setTimeout(() => {
-    // @ts-ignore
-    window.hello = 'world';
-  }, 2500);
 });
 ```
 
-上記の例では、2500ms 後に `window.hello` が定義されるので、タイムアウトによりエラーが発生します。
+上記の例では、`2500ms` 後に `window.hello` が定義されますが、監視時間は `2000ms` までなのでエラーが発生します。
 
-In the above example, `window.hello` is defined after 2500ms, so the timeout causes an error.
+In the above example, `window.hello` is defined after `2500ms`, but an error occurs because the monitoring time is up
+to `2000ms`.
 
 ## Arguments
 
