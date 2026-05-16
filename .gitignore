@@ -5,4 +5,5 @@ dist
 coverage
 *.tgz
 yarn-error.log
+.playwright-mcp/
 ```

@@ -13,7 +13,7 @@ package-lock.json
 jest.config.js
 prettier.config.js
 tsconfig.json
-webpack.config.js
+esbuild.config.mjs
 
 *.tgz
 dist/**/*.js.map

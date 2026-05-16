@@ -9,8 +9,11 @@ An asynchronous function that waits until a property of an object is defined.
 ## Table of Contents
 
 - [Installation](#installation)
+  - [Node.js / bundler](#nodejs--bundler)
+  - [Browser (without a bundler)](#browser-without-a-bundler)
 - [Usage](#usage)
   - [Basic Example](#basic-example)
+  - [Browser Example](#browser-example)
   - [Advanced Examples](#advanced-examples)
 - [API Reference](#api-reference)
   - [Arguments](#arguments)
@@ -20,6 +23,8 @@ An asynchronous function that waits until a property of an object is defined.
 
 ## Installation
 
+### Node.js / bundler
+
 ```bash
 # Using npm
 npm install @kiyotd/wait-define
@@ -27,6 +32,31 @@ npm install @kiyotd/wait-define
 # Using yarn
 yarn add @kiyotd/wait-define
 ```
+
+The package ships both ESM (`dist/index.mjs`) and CommonJS (`dist/index.cjs`) builds along with type definitions, and the right one is picked automatically through the `exports` field in `package.json`.
+
+### Browser (without a bundler)
+
+The ESM build is a standalone, browser-ready file. Pick whichever delivery method fits your project.
+
+**Option A. Download from GitHub Releases**
+
+Grab `wait-define.mjs` from the [latest release](https://github.com/kiyotd/wait-define/releases/latest) and drop it under your site (e.g. `js/wait-define.mjs`).
+
+```text
+# Always-latest URL
+https://github.com/kiyotd/wait-define/releases/latest/download/wait-define.mjs
+```
+
+**Option B. Load from a CDN**
+
+```html
+<script type="module">
+  import { waitDefine } from "https://cdn.jsdelivr.net/npm/@kiyotd/wait-define/dist/index.mjs";
+</script>
+```
+
+`unpkg.com` and `esm.sh` work the same way.
 
 ## Usage
 
@@ -56,6 +86,43 @@ document.addEventListener('DOMContentLoaded', async () => {
 ```
 
 In the above example, `window.hello` is defined after `2500ms`, but an error occurs because the monitoring time is only up to `2000ms`.
+
+### Browser Example
+
+A self-contained HTML page using the locally-hosted ESM build:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>wait-define example</title>
+</head>
+<body>
+  <p id="status">Waiting for window.hello ...</p>
+
+  <script type="module">
+    import { waitDefine } from "./js/wait-define.mjs";
+
+    const status = document.getElementById("status");
+
+    setTimeout(() => {
+      window.hello = "world";
+    }, 1000);
+
+    waitDefine("hello", window, 100, 3000)
+      .then(() => {
+        status.textContent = "window.hello is defined!";
+      })
+      .catch((error) => {
+        status.textContent = `An error occurred: ${error.message}`;
+      });
+  </script>
+</body>
+</html>
+```
+
+Swap `./js/wait-define.mjs` for a CDN URL (see [Installation](#browser-without-a-bundler)) if you don't want to host the file yourself.
 
 ### Advanced Examples
 

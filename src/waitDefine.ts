@@ -20,7 +20,7 @@ export function waitDefine(
   timeout_ms?: number,
 ): Promise<void> {
   return new Promise((resolve, reject): void => {
-    let intervalId: NodeJS.Timeout;
+    let intervalId: ReturnType<typeof setInterval>;
 
     const check = new Promise<void>((resolve) => {
       intervalId = setInterval(() => {
